@@ -44,7 +44,6 @@ The hardening script applies baseline security policies aligned with the CIS ben
 
 Open **Windows PowerShell as Administrator** and run:
 
-
 # Verify PowerShell version
 $PSVersionTable.PSVersion
 
@@ -58,13 +57,13 @@ Install-Module -Name SecurityPolicyDsc -Force
 Install-Module -Name NetworkingDsc -Force
 Install-Module -Name PSDesiredStateConfiguration -Force
 
-# Verify installed modules
+# Verify modules
 Get-InstalledModule AuditPolicyDsc
 Get-InstalledModule SecurityPolicyDsc
 Get-InstalledModule NetworkingDsc
 Get-InstalledModule PSDesiredStateConfiguration
 
-# Navigate to script location
+# Navigate to hardening folder
 cd C:\Hardening
 
 # Generate MOF files
@@ -75,8 +74,16 @@ Start-DscConfiguration -Path .\CIS_Benchmark_WindowsServer2019_v100 -Force -Verb
 
 # Verify status
 Get-DscConfigurationStatus
-
-# View applied configuration
 Get-DscConfiguration
+
+# Import Local GPO
+cd C:\LGPO
+.\LGPO.exe /g .\GPO_Backup
+
+# Refresh policy
+gpupdate /force
+
+# Verify GPO
+gpresult /r
 
 
